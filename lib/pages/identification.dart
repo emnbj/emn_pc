@@ -17,11 +17,8 @@ class identificationState extends State<Identification> {
   void id() {
     listId.clear();
     listId.add(DropdownMenuItem(value: "EMN-001", child: Text("EMN-001")));
-
     listId.add(DropdownMenuItem(value: "EMN-002", child: Text("EMN-002")));
-
     listId.add(DropdownMenuItem(value: "EMN-003", child: Text("EMN-003")));
-
     listId.add(DropdownMenuItem(value: "EMN-004", child: Text("EMN-004")));
   }
 

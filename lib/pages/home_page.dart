@@ -41,7 +41,7 @@ class HomePageState extends State<HomePage> {
 
       body: ListView(
         children: [
-          //prendre  un ordinateur
+
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -88,7 +88,10 @@ class HomePageState extends State<HomePage> {
             ),
           ),
 
-          //Deposer un ordinateur
+          
+
+          
+          //prendre ou déposer un ordinateur
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -108,7 +111,7 @@ class HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/depot.png",
+                    "assets/images/ordinateur.png",
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
@@ -134,6 +137,9 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
+          
+          
 
           //Modifier le code PIN
           GestureDetector(
