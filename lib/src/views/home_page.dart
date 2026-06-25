@@ -1,8 +1,12 @@
+import 'package:application/src/utils/consts.dart';
+import 'package:application/src/views/forget.dart';
 import 'package:application/src/views/identification.dart';
 import 'package:application/src/views/modification.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
+
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,9 +36,7 @@ class HomePageState extends State<HomePage> {
   void changerImage() {
     int indexAleatoire = Random().nextInt(mesImages.length);
 
-    setState(() {
-      imageActuelle = mesImages[indexAleatoire];
-    });
+    setState(() => imageActuelle = mesImages[indexAleatoire]);
   }
 
   @override
@@ -54,58 +56,79 @@ class HomePageState extends State<HomePage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Column(),
-        bottomNavigationBar: Container(
-          height: 300,
-
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40),
-              topRight: Radius.circular(40.0),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Image.asset(appLogo, color: Colors.white.withAlpha(50)),
             ),
-            color: Colors.white,
-          ),
-          padding: const EdgeInsets.all(30),
+            Expanded(
+              flex: 3,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      spreadRadius: 3,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(20),
 
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Identification()),
-                    );
-                  },
-                  child: const Text("Dépot / Retrait PC"),
+                child: Column(
+                  children: [
+                    Text(
+                      "Bienvenue sur l'application de gestion des PC de l'EMN",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => Get.to(() => Identification()),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text("Déposer / Retirer un PC".toUpperCase()),
+                    ),
+                    SizedBox(height: 20),
+                    OutlinedButton(
+                      onPressed: () => Get.to(() => Modification()),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text("Modifier PIN"),
+                    ),
+                    SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () => Get.to(() => ForgetPIN()),
+                      child: const Text(
+                        "PIN oublié ?",
+                        style: TextStyle(decoration: TextDecoration.underline),
+                      ),
+                    ),
+                    Spacer(),
+                    Text("© 2026 EMN - Tous droits réservés"),
+                  ],
                 ),
               ),
-              SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Modification()),
-                    );
-                  },
-                  child: const Text("Modifier PIN"),
-                ),
-              ),
-              SizedBox(height: 30),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "PIN oublié?",
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

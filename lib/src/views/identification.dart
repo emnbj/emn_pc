@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
 
+import 'package:get/get.dart';
+
 class Identification extends StatefulWidget {
   const Identification({super.key});
 
@@ -34,9 +36,7 @@ class IdentificationState extends State<Identification> {
   void changerImage() {
     int indexAleatoire = Random().nextInt(mesImages.length);
 
-    setState(() {
-      imageActuelle = mesImages[indexAleatoire];
-    });
+    setState(() => imageActuelle = mesImages[indexAleatoire]);
   }
 
   @override
@@ -45,112 +45,103 @@ class IdentificationState extends State<Identification> {
     super.dispose();
   }
 
+  onSubmit() {
+    var stds = myStudents.where((s) => s.idPc == pcIdController.text);
+
+    if (stds.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Numéro de PC introuvable"),
+          content: Text("Veuillez vérifier puis reessayer."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Fermer"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      Student selectStudent = stds.first;
+
+      Get.to(() => Recap(student: selectStudent));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(imageActuelle),
-          fit: BoxFit.cover,
+    return Scaffold(
+      appBar: AppBar(title: Text("Identification")),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(imageActuelle),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-
-        body: Column(),
-
-        bottomNavigationBar: Container(
-          height: 400,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
-            ),
-            color: Colors.white,
-          ),
-          padding: const EdgeInsets.all(30),
-
-          child: Column(
-            children: [
-              Text(
-                'Identifiez - vous',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(width: 50, height: 50),
-
-              TextFormField(
-                controller: pcIdController,
-                keyboardType: TextInputType.number,
-
-                decoration: const InputDecoration(
-                  labelText: "Entrez l'identifiant du PC",
-                  border: OutlineInputBorder(),
-                  hintText: 'Ex: 15-2020',
-                ),
-
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ce champ numérique est obligatoire !';
-                  }
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 50),
-              Container(
-                margin: EdgeInsets.only(left: 200),
-                child: TextButton(
-                  onPressed: () {
-                    var stds = myStudents.where(
-                      (s) => s.idPc == pcIdController.text,
-                    );
-
-                    if (stds.isEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("Numéro de PC introuvable"),
-                          content: Text("Veuillez vérifier puis reessayer."),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Fermer"),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      Student selectStudent = stds.first;
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Recap(student: selectStudent),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Row(
-                    children: [
-                      Text(
-                        "Continuer",
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Icon(Icons.arrow_right),
-                    ],
+        child: Column(
+          children: [
+            Expanded(child: Container()),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.all(30),
+
+                child: Column(
+                  children: [
+                    Text(
+                      "Veuillez saisir l'identifiant du PC puis continuer"
+                          .toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        height: 1.2,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+
+                    TextFormField(
+                      controller: pcIdController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: "Entrez l'identifiant du PC",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        hintText: 'Ex: 15-2020',
+                      ),
+
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ce champ numérique est obligatoire !';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => onSubmit(),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: ElevatedButton.icon(
+                        onPressed: () => onSubmit(),
+                        icon: Icon(Icons.chevron_right),
+                        iconAlignment: IconAlignment.end,
+                        label: Text("Continuer"),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

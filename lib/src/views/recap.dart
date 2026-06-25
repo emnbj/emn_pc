@@ -1,5 +1,7 @@
+import 'package:application/src/utils/consts.dart';
 import 'package:application/src/views/pin.dart';
 import 'package:flutter/material.dart';
+import 'package:pinput/pinput.dart';
 import 'dart:math';
 import 'dart:async';
 import '../models/student.dart';
@@ -15,6 +17,7 @@ class Recap extends StatefulWidget {
 
 class RecapState extends State<Recap> {
   Student get student => widget.student;
+  final TextEditingController pinController = TextEditingController();
 
   final List<String> mesImages = [
     'assets/images/EMN-TIT-3.jpeg'
@@ -49,141 +52,107 @@ class RecapState extends State<Recap> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(imageActuelle),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(backgroundColor: Colors.transparent),
+    return Scaffold(
+      appBar: AppBar(title: Text("Récapitulatif")),
+      backgroundColor: Colors.white,
 
-        body: Column(),
-        bottomNavigationBar: Container(
-          height: 400,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)],
             ),
-            color: Colors.white,
+            child: ListTile(
+              title: Text("Identité de l'étudiant", style: appStyleBold),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Nom: ${student.lastName.toUpperCase()}"),
+                  Text("Prénoms: ${student.firstName.toLowerCase()}"),
+                ],
+              ),
+            ),
           ),
-          padding: const EdgeInsets.all(30),
-
-          child: Column(
-            children: [
-              Text(
-                "Récapitulatif",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.blueAccent,
-                ),
+          Container(
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)],
+            ),
+            child: ListTile(
+              title: Text("Autres Informations", style: appStyleBold),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Matricule: ${student.matricule}"),
+                  Text("Spécialité: ${student.training}"),
+                  Text("Cohorte: ${student.cohorte}"),
+                ],
               ),
-
-              Container(
-                width: double.infinity,
-                height: 200,
-                margin: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Text(
-                        "Nom: ${student.lastName.toUpperCase()}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Text(
-                        "Prénoms: ${student.firstName.toLowerCase()}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Text(
-                        "Spécialité: ${student.training}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Text(
-                        "Opération:",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(
-                width: 150,
-                height: 50,
-
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 12, 193, 230),
-                  ),
-
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Pin()),
-                    );
-                  },
-                  child: Text(
-                    "Valider",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          Container(
+            // padding: EdgeInsets.all(12),
+            margin: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: secondary,
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)],
+            ),
+            child: ListTile(
+              textColor: Colors.white,
+              title: Text("Type d'opération", style: appStyleBold),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Type d'opération: Dépôt / Retrait PC"),
+                  Text("Date et Heure: ${DateTime.now()}"),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            "Veuillez entrer votre code PIN pour confirmer l'opération:",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(height: 20),
+          Pinput(
+            onCompleted: (value) => print("Code PIN entré: $value"),
+            autofocus: true,
+            controller: pinController,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 12, 193, 230),
+            ),
+
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Pin()),
+              );
+            },
+            child: Text(
+              "Valider",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-//  actions: [
-        //   IconButton(
-        //     onPressed: () {}, 
-        //     icon: Icon(Icons.menu)),
-
-
-          // IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
-          // IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
-          // IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
-          // IconButton(onPressed: () {}, icon: Icon(Icons.arrow_right))
-    //]
