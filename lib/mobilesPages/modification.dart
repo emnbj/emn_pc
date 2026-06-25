@@ -1,6 +1,7 @@
 
-
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'dart:async';
 
 class Modification extends StatefulWidget {
   const Modification({super.key});
@@ -9,54 +10,82 @@ class Modification extends StatefulWidget {
 }
 
 class ModificationState extends State<Modification> {
+  final List<String> mesImages = [
+    'assets/images/emn-dclic.jpeg',
+    'assets/images/EMN-Referent-Digital.jpeg',
+
+    'assets/images/EMN-TIT-3.jpeg',
+  ];
+  String imageActuelle = ' ';
+  Timer? monChrono;
+
+  @override
+  void initState() {
+    super.initState();
+    imageActuelle = mesImages[0];
+    monChrono = Timer.periodic(Duration(seconds: 5), (timer) {
+      changerImage();
+    });
+  }
+
+  void changerImage() {
+    int index = Random().nextInt(mesImages.length);
+
+    setState(() {
+      imageActuelle = mesImages[index];
+    });
+  }
+
+  @override
+  void dispose() {
+    monChrono?.cancel(); 
+    super.dispose();     
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Image.asset("assets/images/emn.png"),
-        title: Column(
-          children: [
-            Text(
-              "ECOLE DES MÉTIERS DU",
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-              ),
-            ),
-
-            Text(
-              "numérique",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ],
+    return Container(
+       decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(imageActuelle),
+          fit: BoxFit.cover,
         ),
       ),
+      child: 
+    Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
 
-      
-      body: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 50,
+      body: Column(),
+
+      bottomNavigationBar: Container(
+        height: 400,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40.0),
+            topRight: Radius.circular(40.0),
           ),
+          color: Colors.white,
+        ),
+        padding: const EdgeInsets.all(30),
 
-          Container(
-            margin: EdgeInsets.all(20),
+        child: Column(
+          children: [
+
+           Container(
+            margin: EdgeInsets.all(10),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.all(20),
+                    margin: EdgeInsets.all(10),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelText: "Votre code actuel",
+                        labelText: "Ancien PIN",
                         hintText: "votre code",
                         border: OutlineInputBorder(),
                       ),
@@ -70,10 +99,10 @@ class ModificationState extends State<Modification> {
                   ),
 
                   Container(
-                      margin: EdgeInsets.all(20),
+                      margin: EdgeInsets.all(10),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelText: "Nouveau code",
+                        labelText: "Nouveau PIN",
                         hintText: "Code",
                         border: OutlineInputBorder(),
                       ),
@@ -86,10 +115,10 @@ class ModificationState extends State<Modification> {
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.all(20),
+                      margin: EdgeInsets.all(10),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelText: "Confirmer le code",
+                        labelText: "Confirmer le PIN",
                         hintText: "Repeter le code",
                         border: OutlineInputBorder(),
                       ),
@@ -107,11 +136,6 @@ class ModificationState extends State<Modification> {
           ),
 
           SizedBox(
-            width: double.infinity,
-            height: 30,
-          ),
-
-          SizedBox(
             width: 200,
             height: 50,
 
@@ -125,6 +149,7 @@ class ModificationState extends State<Modification> {
                   print("god job");
                 }
               },
+
               child: Text(
                 "Enregistrer",
                 style: TextStyle(
@@ -134,9 +159,13 @@ class ModificationState extends State<Modification> {
                 ),
               ),
             ),
-          ),
-        ],
+          ),          
+          ],
+        ),
       ),
-    );
+
+
+    ),
+    ) ;
   }
 }
