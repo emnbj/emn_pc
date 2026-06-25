@@ -1,5 +1,5 @@
-import 'package:application/mobilesPages/identification.dart';
-import 'package:application/mobilesPages/modification.dart';
+import 'package:application/src/views/identification.dart';
+import 'package:application/src/views/modification.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
@@ -39,8 +39,8 @@ class HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    monChrono?.cancel(); 
-    super.dispose();     
+    monChrono?.cancel();
+    super.dispose();
   }
 
   @override

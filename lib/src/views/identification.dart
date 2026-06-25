@@ -1,5 +1,5 @@
-import 'package:application/mobilesPages/recap.dart';
-import 'package:application/models/student.dart';
+import 'package:application/src/views/recap.dart';
+import 'package:application/src/models/student.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
@@ -132,7 +132,6 @@ class IdentificationState extends State<Identification> {
                           builder: (context) => Recap(student: selectStudent),
                         ),
                       );
-                    
                     }
                   },
                   child: const Row(

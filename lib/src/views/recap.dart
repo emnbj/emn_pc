@@ -1,8 +1,8 @@
-import 'package:application/mobilesPages/pin.dart';
+import 'package:application/src/views/pin.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
-import '/models/student.dart';
+import '../models/student.dart';
 
 class Recap extends StatefulWidget {
   final Student student;
